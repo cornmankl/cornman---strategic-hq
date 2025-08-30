@@ -56,6 +56,10 @@ const DashboardPage: React.FC = () => {
         amount: 8.9 + Math.random() * 2,
         time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
         customerId: randomCustomer.id,
+        items: [{ id: `item-${Date.now()}`, name: randomProduct, quantity: 1, price: 8.9 + Math.random() * 2 }],
+        total: 8.9 + Math.random() * 2,
+        createdAt: new Date().toISOString(),
+        status: 'completed'
       };
 
       addSale(newSale);

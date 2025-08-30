@@ -53,6 +53,16 @@ export interface Sale {
   amount: number;
   time: string;
   customerId: string;
+  // Additional properties needed by MobileApp.tsx
+  items?: Array<{
+    id: string;
+    name: string;
+    quantity: number;
+    price: number;
+  }>;
+  total: number;
+  createdAt: string;
+  status: 'completed' | 'pending' | 'cancelled';
 }
 
 export interface InventoryItem {
@@ -62,6 +72,10 @@ export interface InventoryItem {
   threshold: number; // Low stock warning threshold
   unit: string; // e.g., 'kg', 'pcs', 'liter'
   cost: number; // Cost per unit
+  // Additional properties needed by MobileApp.tsx
+  price: number;
+  category: string;
+  supplier: string;
 }
 
 export interface Customer {

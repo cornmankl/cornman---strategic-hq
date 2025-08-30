@@ -108,7 +108,7 @@ export const SalesProvider: React.FC<SalesProviderProps> = ({ children }) => {
   const getSalesByDateRange = useCallback(
     (start: Date, end: Date): Sale[] => {
       return state.sales.filter(sale => {
-        const saleDate = new Date(sale.created_at || sale.createdAt);
+        const saleDate = new Date(sale.createdAt);
         return saleDate >= start && saleDate <= end;
       });
     },
@@ -121,7 +121,7 @@ export const SalesProvider: React.FC<SalesProviderProps> = ({ children }) => {
     if (state.sales.length === 0) return 0;
     
     // Calculate date range in days
-    const dates = state.sales.map(sale => new Date(sale.created_at || sale.createdAt));
+    const dates = state.sales.map(sale => new Date(sale.createdAt));
     const minDate = new Date(Math.min(...dates.map(date => date.getTime())));
     const maxDate = new Date(Math.max(...dates.map(date => date.getTime())));
     const days = Math.ceil((maxDate.getTime() - minDate.getTime()) / (1000 * 60 * 60 * 24)) || 1;

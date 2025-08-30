@@ -264,12 +264,12 @@ export const ROADMAP_DATA: RoadmapPhase[] = [
 
 // --- MOCK BACKEND DATA ---
 export const MOCK_INITIAL_INVENTORY: InventoryItem[] = [
-  { id: 'corn', name: 'Jagung Biji', stock: 15, threshold: 20, unit: 'kg', cost: 3.2 },
-  { id: 'milk', name: 'Susu Pekat', stock: 50, threshold: 25, unit: 'can', cost: 2.1 },
-  { id: 'butter', name: 'Mentega', stock: 45, threshold: 25, unit: 'block', cost: 5.0 },
-  { id: 'cheese', name: 'Serbuk Keju', stock: 30, threshold: 20, unit: 'pack', cost: 4.2 },
-  { id: 'cup', name: 'Cawan (Besar)', stock: 250, threshold: 100, unit: 'pcs', cost: 0.2 },
-  { id: 'cup-small', name: 'Cawan (Kecil)', stock: 80, threshold: 100, unit: 'pcs', cost: 0.15 },
+  { id: 'corn', name: 'Jagung Biji', stock: 15, threshold: 20, unit: 'kg', cost: 3.2, price: 8.9, category: 'Grains', supplier: 'Local Farm' },
+  { id: 'milk', name: 'Susu Pekat', stock: 50, threshold: 25, unit: 'can', cost: 2.1, price: 4.5, category: 'Dairy', supplier: 'Dairy Co' },
+  { id: 'butter', name: 'Mentega', stock: 45, threshold: 25, unit: 'block', cost: 5.0, price: 12.0, category: 'Dairy', supplier: 'Dairy Co' },
+  { id: 'cheese', name: 'Serbuk Keju', stock: 30, threshold: 20, unit: 'pack', cost: 4.2, price: 9.8, category: 'Dairy', supplier: 'Dairy Co' },
+  { id: 'cup', name: 'Cawan (Besar)', stock: 250, threshold: 100, unit: 'pcs', cost: 0.2, price: 0.5, category: 'Packaging', supplier: 'Supply Co' },
+  { id: 'cup-small', name: 'Cawan (Kecil)', stock: 80, threshold: 100, unit: 'pcs', cost: 0.15, price: 0.4, category: 'Packaging', supplier: 'Supply Co' },
 ];
 
 export const MOCK_INITIAL_CUSTOMERS: Customer[] = [
@@ -297,9 +297,39 @@ export const MOCK_INITIAL_CUSTOMERS: Customer[] = [
 ];
 
 export const MOCK_INITIAL_SALES: Sale[] = [
-  { id: 'sale1', product: 'CRNMN Signature', amount: 8.9, time: '14:32', customerId: 'cust1' },
-  { id: 'sale2', product: 'Spicy Sambal', amount: 9.9, time: '14:35', customerId: 'cust2' },
-  { id: 'sale3', product: 'CRNMN Signature', amount: 8.9, time: '14:41', customerId: 'cust1' },
+  { 
+    id: 'sale1', 
+    product: 'CRNMN Signature', 
+    amount: 8.9, 
+    time: '14:32', 
+    customerId: 'cust1',
+    items: [{ id: 'item1', name: 'CRNMN Signature', quantity: 1, price: 8.9 }],
+    total: 8.9,
+    createdAt: '2024-07-18T14:32:00Z',
+    status: 'completed'
+  },
+  { 
+    id: 'sale2', 
+    product: 'Spicy Sambal', 
+    amount: 9.9, 
+    time: '14:35', 
+    customerId: 'cust2',
+    items: [{ id: 'item2', name: 'Spicy Sambal', quantity: 1, price: 9.9 }],
+    total: 9.9,
+    createdAt: '2024-07-18T14:35:00Z',
+    status: 'completed'
+  },
+  { 
+    id: 'sale3', 
+    product: 'CRNMN Signature', 
+    amount: 8.9, 
+    time: '14:41', 
+    customerId: 'cust1',
+    items: [{ id: 'item3', name: 'CRNMN Signature', quantity: 1, price: 8.9 }],
+    total: 8.9,
+    createdAt: '2024-07-18T14:41:00Z',
+    status: 'completed'
+  },
 ];
 
 export const MOCK_INITIAL_INVOICES: Invoice[] = [

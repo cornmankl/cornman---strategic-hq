@@ -9,6 +9,43 @@ import { LoadingSpinner, Skeleton } from './components/feedback/LoadingStates';
 import { Badge } from './components/UI';
 import { cn } from './utils/cn';
 
+// GLM 4.5 Under Z AI Integration
+import { 
+  generateBusinessInsights, 
+  generateMarketingContent, 
+  generateInventoryRecommendations,
+  generateSalesStrategy,
+  generateCustomerInsights,
+  getApiKeyStatus
+} from './services/glmService';
+
+// AI Status Indicator Component
+const AIStatusIndicator: React.FC = () => {
+  const [apiStatus, setApiStatus] = useState(getApiKeyStatus());
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setApiStatus(getApiKeyStatus());
+    }, 5000); // Update every 5 seconds
+    
+    return () => clearInterval(interval);
+  }, []);
+  
+  return (
+    <div className="flex items-center justify-center space-x-2">
+      <Badge variant="info" className="text-xs">
+        🤖 GLM 4.5 AI Active
+      </Badge>
+      <Badge variant="success" className="text-xs">
+        🔑 Key {apiStatus.currentKey}/{apiStatus.totalKeys}
+      </Badge>
+      <Badge variant="success" className="text-xs">
+        {apiStatus.status}
+      </Badge>
+    </div>
+  );
+};
+
 // Mobile Navigation Component
 const MobileNavigation: React.FC<{ activeTab: string; onTabChange: (tab: string) => void }> = ({ 
   activeTab, 
@@ -45,10 +82,12 @@ const MobileNavigation: React.FC<{ activeTab: string; onTabChange: (tab: string)
   );
 };
 
-// Mobile Dashboard
+// Mobile Dashboard - Enhanced with GLM AI
 const MobileDashboard: React.FC = () => {
   const [metrics, setMetrics] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [aiInsight, setAiInsight] = useState<string>('');
+  const [aiLoading, setAiLoading] = useState(false);
 
   useEffect(() => {
     const loadMetrics = async () => {
@@ -70,6 +109,60 @@ const MobileDashboard: React.FC = () => {
     loadMetrics();
   }, []);
 
+  // GLM AI Integration
+  const generateAIInsight = async () => {
+    setAiLoading(true);
+    try {
+      const insight = await generateBusinessInsights({
+        revenue: metrics?.monthRevenue || 0,
+        sales: metrics?.todaySalesCount || 0,
+        inventory: MOCK_INITIAL_INVENTORY.length,
+        customers: MOCK_INITIAL_CUSTOMERS.length
+      });
+      setAiInsight(insight);
+    } catch (error) {
+      setAiInsight('❌ Gagal mendapatkan insight AI. Sila cuba lagi.');
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  // Generate Sales Strategy AI
+  const generateSalesStrategyAI = async () => {
+    setAiLoading(true);
+    try {
+      const strategy = await generateSalesStrategy({
+        todaySales: metrics?.todaySalesCount || 0,
+        monthSales: metrics?.monthRevenue || 0,
+        topProduct: 'CRNMN Signature',
+        trend: 'Growing'
+      });
+      setAiInsight(strategy);
+    } catch (error) {
+      setAiInsight('❌ Gagal mendapatkan strategi jualan AI. Sila cuba lagi.');
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  // Generate Customer Insights AI
+  const generateCustomerInsightsAI = async () => {
+    setAiLoading(true);
+    try {
+      const insights = await generateCustomerInsights({
+        totalCustomers: MOCK_INITIAL_CUSTOMERS.length,
+        newCustomers: Math.floor(Math.random() * 5) + 1,
+        retentionRate: 85,
+        averageOrderValue: 12.50
+      });
+      setAiInsight(insights);
+    } catch (error) {
+      setAiInsight('❌ Gagal mendapatkan insight pelanggan AI. Sila cuba lagi.');
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="p-4 space-y-4">
@@ -86,6 +179,9 @@ const MobileDashboard: React.FC = () => {
       <div className="text-center mb-6">
         <h1 className="text-2xl font-bold text-brand-electric">🌽 CORNMAN</h1>
         <p className="text-dark-300">Strategic HQ Mobile</p>
+        <div className="flex items-center justify-center mt-2">
+          <AIStatusIndicator />
+        </div>
       </div>
 
       {/* Quick Stats */}
@@ -106,6 +202,63 @@ const MobileDashboard: React.FC = () => {
           </div>
         </Card>
       </div>
+
+      {/* AI Insights Card - Enhanced */}
+      <Card variant="glass" className="p-4">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-bold text-brand-electric">🤖 GLM AI Insights</h3>
+          <Button 
+            size="sm" 
+            variant="ghost" 
+            onClick={generateAIInsight}
+            disabled={aiLoading}
+            className="text-xs"
+          >
+            {aiLoading ? '⏳ Loading...' : '🔄 Business'}
+          </Button>
+        </div>
+        
+        {aiInsight ? (
+          <div className="p-3 bg-dark-700 rounded-lg text-sm whitespace-pre-line mb-3">
+            {aiInsight}
+          </div>
+        ) : (
+          <div className="text-center py-3">
+            <p className="text-dark-300 text-xs mb-3">Pilih jenis insight AI</p>
+          </div>
+        )}
+
+        {/* AI Function Buttons */}
+        <div className="grid grid-cols-3 gap-2">
+          <Button 
+            onClick={generateAIInsight}
+            disabled={aiLoading}
+            size="sm"
+            variant="secondary"
+            className="text-xs"
+          >
+            🏢 Business
+          </Button>
+          <Button 
+            onClick={generateSalesStrategyAI}
+            disabled={aiLoading}
+            size="sm"
+            variant="secondary"
+            className="text-xs"
+          >
+            💰 Sales
+          </Button>
+          <Button 
+            onClick={generateCustomerInsightsAI}
+            disabled={aiLoading}
+            size="sm"
+            variant="secondary"
+            className="text-xs"
+          >
+            👥 Customers
+          </Button>
+        </div>
+      </Card>
 
       {/* Alerts */}
       {metrics?.lowStockAlerts > 0 && (
@@ -254,10 +407,12 @@ const MobileSales: React.FC = () => {
   );
 };
 
-// Mobile Inventory Management
+// Mobile Inventory Management - Enhanced with GLM AI
 const MobileInventory: React.FC = () => {
   const [inventory, setInventory] = useState(MOCK_INITIAL_INVENTORY);
   const [filter, setFilter] = useState<'all' | 'low' | 'out'>('all');
+  const [aiRecommendation, setAiRecommendation] = useState<string>('');
+  const [aiLoading, setAiLoading] = useState(false);
 
   const filteredInventory = inventory.filter(item => {
     if (filter === 'low') return item.stock <= item.threshold && item.stock > 0;
@@ -267,6 +422,19 @@ const MobileInventory: React.FC = () => {
 
   const lowStockCount = inventory.filter(item => item.stock <= item.threshold && item.stock > 0).length;
   const outOfStockCount = inventory.filter(item => item.stock === 0).length;
+
+  // GLM AI Integration for Inventory
+  const generateInventoryAI = async () => {
+    setAiLoading(true);
+    try {
+      const recommendation = await generateInventoryRecommendations(inventory);
+      setAiRecommendation(recommendation);
+    } catch (error) {
+      setAiRecommendation('❌ Gagal mendapatkan cadangan AI. Sila cuba lagi.');
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   return (
     <div className="p-4 space-y-4 pb-20">
@@ -312,6 +480,32 @@ const MobileInventory: React.FC = () => {
           </button>
         ))}
       </div>
+
+      {/* AI Inventory Recommendations */}
+      <Card variant="glass" className="p-4">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-bold text-brand-electric">🤖 AI Cadangan Inventori</h3>
+          <Button 
+            size="sm" 
+            variant="ghost" 
+            onClick={generateInventoryAI}
+            disabled={aiLoading}
+            className="text-xs"
+          >
+            {aiLoading ? '⏳ Loading...' : '🔄 Dapatkan Cadangan'}
+          </Button>
+        </div>
+        
+        {aiRecommendation ? (
+          <div className="p-3 bg-dark-700 rounded-lg text-sm whitespace-pre-line">
+            {aiRecommendation}
+          </div>
+        ) : (
+          <div className="text-center py-3">
+            <p className="text-dark-300 text-xs">Klik butang untuk dapatkan cadangan AI</p>
+          </div>
+        )}
+      </Card>
 
       {/* Inventory List */}
       <div className="space-y-3">
@@ -367,7 +561,7 @@ const MobileInventory: React.FC = () => {
   );
 };
 
-// Mobile WhatsApp Interface - REAL BOT
+// Mobile WhatsApp Interface - Enhanced with GLM AI
 const MobileWhatsApp: React.FC = () => {
   const [botStatus, setBotStatus] = useState<'disconnected' | 'connecting' | 'connected'>('disconnected');
   const [messageQueue, setMessageQueue] = useState<any[]>([]);
@@ -375,6 +569,8 @@ const MobileWhatsApp: React.FC = () => {
   const [botMessage, setBotMessage] = useState('');
   const [qrCode, setQrCode] = useState<string | null>(null);
   const [isStarting, setIsStarting] = useState(false);
+  const [aiGeneratedContent, setAiGeneratedContent] = useState<string>('');
+  const [aiLoading, setAiLoading] = useState(false);
 
   useEffect(() => {
     const status = whatsappService.getStatus();
@@ -453,6 +649,20 @@ const MobileWhatsApp: React.FC = () => {
     }
   };
 
+  // GLM AI Integration for Marketing Content
+  const generateMarketingAI = async (platform: string = 'WhatsApp', product: string = 'CRNMN Signature') => {
+    setAiLoading(true);
+    try {
+      const content = await generateMarketingContent(platform, product);
+      setAiGeneratedContent(content);
+      setNewMessage(prev => ({ ...prev, body: content }));
+    } catch (error) {
+      setAiGeneratedContent('❌ Gagal menjana kandungan AI. Sila cuba lagi.');
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
   const handleSendMessage = async () => {
     if (newMessage.to && newMessage.body) {
       await whatsappService.sendMessage({
@@ -483,7 +693,7 @@ const MobileWhatsApp: React.FC = () => {
               <p className="font-medium">Status: {botStatus}</p>
               <p className="text-sm text-dark-300">Queue: {messageQueue.length} messages</p>
             </div>
-            <Badge variant={botStatus === 'connected' ? 'success' : botStatus === 'connecting' ? 'warning' : 'danger'}>
+            <Badge variant={botStatus === 'connected' ? 'success' : botStatus === 'connecting' ? 'warning' : 'error'}>
               {botStatus}
             </Badge>
           </div>
@@ -578,6 +788,51 @@ const MobileWhatsApp: React.FC = () => {
         </div>
       </Card>
 
+      {/* GLM AI Content Generator */}
+      <Card variant="glass" className="p-4">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-bold text-brand-electric">🤖 GLM AI Content Generator</h3>
+          <Button 
+            size="sm" 
+            variant="ghost" 
+            onClick={() => generateMarketingAI('WhatsApp', 'CRNMN Signature')}
+            disabled={aiLoading}
+            className="text-xs"
+          >
+            {aiLoading ? '⏳ Loading...' : '🔄 Generate AI'}
+          </Button>
+        </div>
+        
+        {aiGeneratedContent ? (
+          <div className="p-3 bg-dark-700 rounded-lg text-sm whitespace-pre-line mb-3">
+            {aiGeneratedContent}
+          </div>
+        ) : (
+          <div className="text-center py-3">
+            <p className="text-dark-300 text-xs">Klik butang untuk menjana kandungan AI</p>
+          </div>
+        )}
+        
+        <div className="grid grid-cols-2 gap-2">
+          <Button 
+            onClick={() => generateMarketingAI('WhatsApp', 'CRNMN Signature')}
+            disabled={aiLoading}
+            size="sm"
+            variant="secondary"
+          >
+            🍿 CRNMN Signature
+          </Button>
+          <Button 
+            onClick={() => generateMarketingAI('WhatsApp', 'Spicy Sambal')}
+            disabled={aiLoading}
+            size="sm"
+            variant="secondary"
+          >
+            🌶️ Spicy Sambal
+          </Button>
+        </div>
+      </Card>
+
       {/* Message Templates */}
       <Card variant="default" className="p-4">
         <h3 className="font-bold mb-4">📋 Quick Templates</h3>
@@ -618,10 +873,12 @@ const MobileWhatsApp: React.FC = () => {
   );
 };
 
-// Mobile Analytics Dashboard
+// Mobile Analytics Dashboard - Enhanced with GLM AI
 const MobileAnalytics: React.FC = () => {
   const [analytics, setAnalytics] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [aiInsight, setAiInsight] = useState<string>('');
+  const [aiLoading, setAiLoading] = useState(false);
 
   useEffect(() => {
     const loadAnalytics = async () => {
@@ -647,6 +904,24 @@ const MobileAnalytics: React.FC = () => {
     };
     loadAnalytics();
   }, []);
+
+  // GLM AI Integration for Analytics
+  const generateAnalyticsAI = async () => {
+    setAiLoading(true);
+    try {
+      const insight = await generateBusinessInsights({
+        revenue: analytics?.revenue?.totalRevenue || 0,
+        sales: analytics?.sales?.totalSales || 0,
+        inventory: analytics?.inventory?.totalItems || 0,
+        customers: analytics?.customer?.totalCustomers || 0
+      });
+      setAiInsight(insight);
+    } catch (error) {
+      setAiInsight('❌ Gagal mendapatkan insight AI. Sila cuba lagi.');
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -676,7 +951,7 @@ const MobileAnalytics: React.FC = () => {
           </div>
         </div>
         <div className="mt-4 flex items-center">
-          <Badge variant={analytics?.revenue?.revenueGrowth > 0 ? 'success' : 'danger'}>
+          <Badge variant={analytics?.revenue?.revenueGrowth > 0 ? 'success' : 'error'}>
             {analytics?.revenue?.revenueGrowth > 0 ? '+' : ''}{analytics?.revenue?.revenueGrowth || 0}%
           </Badge>
           <span className="ml-2 text-sm text-dark-300">vs last month</span>
@@ -718,28 +993,54 @@ const MobileAnalytics: React.FC = () => {
           </div>
           <div className="flex justify-between items-center">
             <span>Out of Stock</span>
-            <Badge variant="danger">{analytics?.inventory?.outOfStockItems || 0}</Badge>
+            <Badge variant="error">{analytics?.inventory?.outOfStockItems || 0}</Badge>
           </div>
         </div>
       </Card>
 
-      {/* AI Insights */}
+      {/* AI Insights - Enhanced with GLM */}
       <Card variant="glass" className="p-4">
-        <h3 className="font-bold mb-4">🤖 AI Insights</h3>
-        <div className="space-y-3">
-          <div className="p-3 bg-dark-700 rounded-lg">
-            <p className="text-sm">📈 Your revenue growth is {analytics?.revenue?.revenueGrowth || 0}% this month. Consider increasing marketing efforts!</p>
-          </div>
-          <div className="p-3 bg-dark-700 rounded-lg">
-            <p className="text-sm">⚠️ {analytics?.inventory?.lowStockItems || 0} items are running low. Plan your next restock order.</p>
-          </div>
-          <div className="p-3 bg-dark-700 rounded-lg">
-            <p className="text-sm">🎯 Customer acquisition is strong with {analytics?.customer?.newCustomers || 0} new customers this month!</p>
-          </div>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-bold text-brand-electric">🤖 GLM AI Insights</h3>
+          <Button 
+            size="sm" 
+            variant="ghost" 
+            onClick={generateAnalyticsAI}
+            disabled={aiLoading}
+            className="text-xs"
+          >
+            {aiLoading ? '⏳ Loading...' : '🔄 Refresh AI'}
+          </Button>
         </div>
-        <AiButton className="w-full mt-4">
-          🤖 Generate More Insights
-        </AiButton>
+        
+        {aiInsight ? (
+          <div className="space-y-3">
+            <div className="p-3 bg-dark-700 rounded-lg text-sm whitespace-pre-line">
+              {aiInsight}
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <div className="p-3 bg-dark-700 rounded-lg">
+              <p className="text-sm">📈 Your revenue growth is {analytics?.revenue?.revenueGrowth || 0}% this month. Consider increasing marketing efforts!</p>
+            </div>
+            <div className="p-3 bg-dark-700 rounded-lg">
+              <p className="text-sm">⚠️ {analytics?.inventory?.lowStockItems || 0} items are running low. Plan your next restock order.</p>
+            </div>
+            <div className="p-3 bg-dark-700 rounded-lg">
+              <p className="text-sm">🎯 Customer acquisition is strong with {analytics?.customer?.newCustomers || 0} new customers this month!</p>
+            </div>
+          </div>
+        )}
+        
+        <Button 
+          onClick={generateAnalyticsAI}
+          disabled={aiLoading}
+          className="w-full mt-4"
+          variant="primary"
+        >
+          {aiLoading ? '⏳ AI sedang berfikir...' : '🤖 Dapatkan Insight GLM AI'}
+        </Button>
       </Card>
     </div>
   );
@@ -794,6 +1095,9 @@ export const MobileApp: React.FC = () => {
       {/* Status Bar */}
       <div className="bg-dark-800 p-2 text-center text-sm">
         <span className="text-brand-electric">●</span> CORNMAN Mobile • {user.businessName || 'Demo Mode'}
+        <div className="flex items-center justify-center mt-1">
+          <AIStatusIndicator />
+        </div>
       </div>
 
       {/* Main Content */}

@@ -82,15 +82,45 @@ type AppAction =
 
 // Mock Initial Data
 const MOCK_INITIAL_SALES: Sale[] = [
-  { id: 'sale-1', product: 'CRNMN Signature', amount: 12.90, time: '10:30', customerId: 'cust-1' },
-  { id: 'sale-2', product: 'Spicy Sambal', amount: 8.90, time: '11:15', customerId: 'cust-2' },
-  { id: 'sale-3', product: 'Cheesy Cheeza', amount: 10.90, time: '12:00', customerId: 'cust-3' },
+  { 
+    id: 'sale-1', 
+    product: 'CRNMN Signature', 
+    amount: 12.90, 
+    time: '10:30', 
+    customerId: 'cust-1',
+    items: [{ id: 'item1', name: 'CRNMN Signature', quantity: 1, price: 12.90 }],
+    total: 12.90,
+    createdAt: '2024-12-20T10:30:00Z',
+    status: 'completed'
+  },
+  { 
+    id: 'sale-2', 
+    product: 'Spicy Sambal', 
+    amount: 8.90, 
+    time: '11:15', 
+    customerId: 'cust-2',
+    items: [{ id: 'item2', name: 'Spicy Sambal', quantity: 1, price: 8.90 }],
+    total: 8.90,
+    createdAt: '2024-12-20T11:15:00Z',
+    status: 'completed'
+  },
+  { 
+    id: 'sale-3', 
+    product: 'Cheesy Cheeza', 
+    amount: 10.90, 
+    time: '12:00', 
+    customerId: 'cust-3',
+    items: [{ id: 'item3', name: 'Cheesy Cheeza', quantity: 1, price: 10.90 }],
+    total: 10.90,
+    createdAt: '2024-12-20T12:00:00Z',
+    status: 'completed'
+  },
 ];
 
 const MOCK_INITIAL_INVENTORY: InventoryItem[] = [
-  { id: 'inv-1', name: 'Jagung Premium Grade A', stock: 45, threshold: 20, unit: 'kg', cost: 3.50 },
-  { id: 'inv-2', name: 'Cawan Kraft Eco-Friendly', stock: 120, threshold: 50, unit: 'pcs', cost: 0.80 },
-  { id: 'inv-3', name: 'Minyak Masak Berkualiti', stock: 8, threshold: 10, unit: 'liter', cost: 8.50 },
+  { id: 'inv-1', name: 'Jagung Premium Grade A', stock: 45, threshold: 20, unit: 'kg', cost: 3.50, price: 8.90, category: 'Grains', supplier: 'Local Farm' },
+  { id: 'inv-2', name: 'Cawan Kraft Eco-Friendly', stock: 120, threshold: 50, unit: 'pcs', cost: 0.80, price: 2.50, category: 'Packaging', supplier: 'Supply Co' },
+  { id: 'inv-3', name: 'Minyak Masak Berkualiti', stock: 8, threshold: 10, unit: 'liter', cost: 8.50, price: 18.90, category: 'Cooking Oil', supplier: 'Oil Co' },
 ];
 
 const MOCK_INITIAL_CUSTOMERS: Customer[] = [
