@@ -209,10 +209,31 @@ A comprehensive, full-stack business management solution built with React, TypeS
 
 #### **Vercel Deployment**
 
-```bash
-npm install -g vercel
-vercel --prod
-```
+1. **One-time Setup**
+   ```bash
+   npm install -g vercel
+   ```
+
+2. **Deploy to Vercel**
+   ```bash
+   vercel --prod
+   ```
+
+3. **Configure Environment Variables**
+   In your Vercel dashboard, add these environment variables:
+   ```
+   VITE_GEMINI_API_KEY=your-gemini-api-key
+   VITE_SUPABASE_URL=your-supabase-url
+   VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
+   VITE_TWILIO_ENVIRONMENT=test
+   VITE_TWILIO_WHATSAPP_NUMBER=+14155238886
+   # Add other VITE_ prefixed environment variables as needed
+   ```
+
+4. **Automatic Deployments**
+   Connect your GitHub repository to Vercel for automatic deployments on push.
+
+> **Note**: The project includes a `vercel.json` configuration file that handles SPA routing, caching, and build settings automatically.
 
 #### **Netlify Deployment**
 
