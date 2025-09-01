@@ -1,0 +1,47 @@
+# Dependencies
+node_modules
+
+# Firebase files (not needed for Vercel deployment)
+.firebase
+firebase.json
+firestore.rules
+functions
+
+# Documentation and guides
+docs
+*.md
+!README.md
+
+# Test files
+tests
+cypress
+*.test.*
+*.spec.*
+**/__tests__
+
+# Config files not needed for deployment
+.eslintrc.cjs
+.prettierrc.cjs
+vitest.config.ts
+tsconfig.eslint.json
+
+# Scripts and tools
+scripts
+fix-imports.ps1
+reorganize.ps1
+start-*.ps1
+quick-start.ps1
+
+# Temporary and local files
+.env.local
+*.log
+
+# Development artifacts
+dev-dist
+
+# Unused legacy files
+App.tsx
+index.tsx
+index.css
+request.json
+metadata.json
