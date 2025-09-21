@@ -316,6 +316,16 @@ cornman-strategic-hq/
 └── public/             # Static assets
 ```
 
+## 📊 **Project Diagrams & Documentation**
+
+For comprehensive visual understanding of the project:
+
+- **[📊 Comprehensive Project Diagrams](./COMPREHENSIVE_PROJECT_DIAGRAMS.md)** - Complete visual overview with architecture, components, and data flow
+- **[🔧 Technical Architecture Diagram](./TECHNICAL_ARCHITECTURE_DIAGRAM.md)** - Detailed technical implementation and system architecture
+- **[📈 Business Process Diagrams](./BUSINESS_PROCESS_DIAGRAMS.md)** - Business workflows, processes, and operational flows  
+- **[🎯 Visual Project Summary](./VISUAL_PROJECT_SUMMARY.md)** - Executive summary with visual project overview
+- **[🗂️ Project Structure Diagram](./PROJECT_STRUCTURE_DIAGRAM.md)** - Detailed file and folder organization
+
 ## 🔐 **Authentication & Security**
 
 ### **Demo Mode**
